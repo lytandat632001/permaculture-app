@@ -1,38 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+
 import 'route_names.dart';
+import 'auth_notifier.dart';
+import '../../features/auth/presentation/providers/auth_provider.dart'; // không hide
+import '../../features/auth/presentation/pages/splash_page.dart';
+import '../../features/auth/presentation/pages/login_page.dart';
+import '../../features/auth/presentation/pages/register_page.dart';
 
-/// Cấu hình router cho toàn bộ ứng dụng
 class AppRouter {
-  AppRouter();
-
   late final GoRouter router = GoRouter(
     initialLocation: '/splash',
+    refreshListenable: authNotifier,
+    redirect: (context, state) {
+      final authProvider = context.read<AuthProvider>();
+      final isLoggedIn = authProvider.isAuthenticated;
+      final isAuthRoute = state.matchedLocation == '/login' ||
+          state.matchedLocation == '/register' ||
+          state.matchedLocation == '/splash';
+      if (!isLoggedIn && !isAuthRoute) {
+        return state.namedLocation(RouteNames.login);
+      }
+      if (isLoggedIn && isAuthRoute) {
+        return state.namedLocation(RouteNames.dashboard);
+      }
+      return null;
+    },
     routes: [
-      // Splash
       GoRoute(
         path: '/splash',
         name: RouteNames.splash,
-        builder: (context, state) => const Scaffold(
-          body: Center(child: CircularProgressIndicator()),
-        ),
+        builder: (context, state) => const SplashPage(),
       ),
-      // Auth
       GoRoute(
         path: '/login',
         name: RouteNames.login,
-        builder: (context, state) => const Scaffold(
-          body: Center(child: Text('Login')),
-        ),
+        builder: (context, state) => const LoginPage(),
       ),
       GoRoute(
         path: '/register',
         name: RouteNames.register,
-        builder: (context, state) => const Scaffold(
-          body: Center(child: Text('Register')),
-        ),
+        builder: (context, state) => const RegisterPage(),
       ),
-      // Home shell (sẽ chứa BottomNavigationBar)
       ShellRoute(
         builder: (context, state, child) => Scaffold(
           body: child,
@@ -81,7 +91,6 @@ class AppRouter {
     ],
   );
 
-  /// Tính toán chỉ số tab dựa trên URI
   int _calculateSelectedIndex(Uri uri) {
     if (uri.path.startsWith('/dashboard')) return 0;
     if (uri.path.startsWith('/gardens')) return 1;
@@ -90,7 +99,6 @@ class AppRouter {
     return 0;
   }
 
-  /// Xử lý khi người dùng chạm vào tab
   void _onTabTapped(BuildContext context, int index) {
     switch (index) {
       case 0:
