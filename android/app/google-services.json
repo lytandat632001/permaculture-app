@@ -12,7 +12,12 @@
           "package_name": "com.example.permaculture_application"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1064440809316-0nv1kedbjant1vs2rhfe5vfsimhg2ds6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCMnZu7t7S0KvUWPDUMBuStaSKiMu9pzG0"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1064440809316-0nv1kedbjant1vs2rhfe5vfsimhg2ds6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1064440809316-mkua5ttbcdek4mf3ggtp96ovt5r25apc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.permacultureApplication"
+              }
+            }
+          ]
         }
       }
     }

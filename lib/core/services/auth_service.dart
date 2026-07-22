@@ -1,14 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_sign_in/google_sign_in.dart';
 
 /// Service xác thực người dùng
 class AuthService {
   final FirebaseAuth _firebaseAuth;
-  final GoogleSignIn _googleSignIn;
+  final GoogleSignIn? _googleSignIn;  // nullable để phù hợp với web
 
   AuthService({
     required FirebaseAuth firebaseAuth,
-    required GoogleSignIn googleSignIn,
+    GoogleSignIn? googleSignIn,  // nhận tham số tùy chọn
   })  : _firebaseAuth = firebaseAuth,
         _googleSignIn = googleSignIn;
 
@@ -36,21 +37,33 @@ class AuthService {
 
   /// Đăng nhập bằng Google
   Future<UserCredential?> signInWithGoogle() async {
-    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-    if (googleUser == null) return null;
+    if (kIsWeb) {
+      // Trên web: dùng popup không cần GoogleSignIn package
+      final googleProvider = GoogleAuthProvider();
+      return _firebaseAuth.signInWithPopup(googleProvider);
+    } else {
+      // Trên mobile: dùng GoogleSignIn package
+      if (_googleSignIn == null) {
+        throw Exception('GoogleSignIn chưa được khởi tạo');
+      }
+      final GoogleSignInAccount? googleUser = await _googleSignIn!.signIn();
+      if (googleUser == null) return null;
 
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
-    final OAuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-    return _firebaseAuth.signInWithCredential(credential);
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+      final OAuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      return _firebaseAuth.signInWithCredential(credential);
+    }
   }
 
   /// Đăng xuất
   Future<void> signOut() async {
-    await _googleSignIn.signOut();
+    if (!kIsWeb && _googleSignIn != null) {
+      await _googleSignIn!.signOut(); // chỉ gọi trên mobile
+    }
     await _firebaseAuth.signOut();
   }
 

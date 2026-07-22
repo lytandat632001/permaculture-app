@@ -56,22 +56,22 @@ class DefaultFirebaseOptions {
     projectId: 'permaculture-app-18acc',
     storageBucket: 'permaculture-app-18acc.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDKNmVonT4lgThMjyxnvKasHgRE2w8klvY',
     appId: '1:1064440809316:ios:51b23114f65ab59ec99c71',
     messagingSenderId: '1064440809316',
     projectId: 'permaculture-app-18acc',
     storageBucket: 'permaculture-app-18acc.firebasestorage.app',
+    iosClientId: '1064440809316-mkua5ttbcdek4mf3ggtp96ovt5r25apc.apps.googleusercontent.com',
     iosBundleId: 'com.example.permacultureApplication',
   );
-
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyDKNmVonT4lgThMjyxnvKasHgRE2w8klvY',
     appId: '1:1064440809316:ios:51b23114f65ab59ec99c71',
     messagingSenderId: '1064440809316',
     projectId: 'permaculture-app-18acc',
     storageBucket: 'permaculture-app-18acc.firebasestorage.app',
+    iosClientId: '1064440809316-mkua5ttbcdek4mf3ggtp96ovt5r25apc.apps.googleusercontent.com',
     iosBundleId: 'com.example.permacultureApplication',
   );
 

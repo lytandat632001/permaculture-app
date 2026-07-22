@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_dimensions.dart';
 
 /// Card chung của ứng dụng
@@ -23,15 +22,18 @@ class AppCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       color: backgroundColor,
-      margin: margin ?? const EdgeInsets.symmetric(
-        horizontal: AppDimensions.paddingDefault,
-        vertical: AppDimensions.paddingSmall,
-      ),
+      margin:
+          margin ??
+          const EdgeInsets.symmetric(
+            horizontal: AppDimensions.paddingDefault,
+            vertical: AppDimensions.paddingSmall,
+          ),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(AppDimensions.cardRadius),
         child: Padding(
-          padding: padding ?? const EdgeInsets.all(AppDimensions.paddingDefault),
+          padding:
+              padding ?? const EdgeInsets.all(AppDimensions.paddingDefault),
           child: child,
         ),
       ),

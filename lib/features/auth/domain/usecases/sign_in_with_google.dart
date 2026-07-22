@@ -5,7 +5,5 @@ class SignInWithGoogle {
   final AuthRepository _repository;
   SignInWithGoogle(this._repository);
 
-  Future<User?> call() async {
-    return _repository.signInWithGoogle();
-  }
+  Future<User?> call() => _repository.signInWithGoogle();
 }

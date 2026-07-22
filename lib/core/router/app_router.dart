@@ -16,7 +16,8 @@ class AppRouter {
     redirect: (context, state) {
       final authProvider = context.read<AuthProvider>();
       final isLoggedIn = authProvider.isAuthenticated;
-      final isAuthRoute = state.matchedLocation == '/login' ||
+      final isAuthRoute =
+          state.matchedLocation == '/login' ||
           state.matchedLocation == '/register' ||
           state.matchedLocation == '/splash';
       if (!isLoggedIn && !isAuthRoute) {
@@ -52,8 +53,14 @@ class AppRouter {
             items: const [
               BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
               BottomNavigationBarItem(icon: Icon(Icons.yard), label: 'Garden'),
-              BottomNavigationBarItem(icon: Icon(Icons.checklist), label: 'Tasks'),
-              BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.checklist),
+                label: 'Tasks',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: 'Profile',
+              ),
             ],
           ),
         ),
@@ -61,30 +68,26 @@ class AppRouter {
           GoRoute(
             path: '/dashboard',
             name: RouteNames.dashboard,
-            builder: (context, state) => const Scaffold(
-              body: Center(child: Text('Dashboard')),
-            ),
+            builder: (context, state) =>
+                const Scaffold(body: Center(child: Text('Dashboard'))),
           ),
           GoRoute(
             path: '/gardens',
             name: RouteNames.gardenList,
-            builder: (context, state) => const Scaffold(
-              body: Center(child: Text('Gardens')),
-            ),
+            builder: (context, state) =>
+                const Scaffold(body: Center(child: Text('Gardens'))),
           ),
           GoRoute(
             path: '/tasks',
             name: RouteNames.taskList,
-            builder: (context, state) => const Scaffold(
-              body: Center(child: Text('Tasks')),
-            ),
+            builder: (context, state) =>
+                const Scaffold(body: Center(child: Text('Tasks'))),
           ),
           GoRoute(
             path: '/profile',
             name: RouteNames.profile,
-            builder: (context, state) => const Scaffold(
-              body: Center(child: Text('Profile')),
-            ),
+            builder: (context, state) =>
+                const Scaffold(body: Center(child: Text('Profile'))),
           ),
         ],
       ),
