@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1064440809316",
+    "project_id": "permaculture-app-18acc",
+    "storage_bucket": "permaculture-app-18acc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1064440809316:android:43376c52fcb4f0b0c99c71",
+        "android_client_info": {
+          "package_name": "com.example.permaculture_application"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMnZu7t7S0KvUWPDUMBuStaSKiMu9pzG0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
