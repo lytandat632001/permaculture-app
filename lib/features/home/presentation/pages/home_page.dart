@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../shared/pages/placeholder_pages.dart';
+import '../../../dashboard/presentation/pages/dashboard_page.dart';
 import '../providers/home_provider.dart';
 import 'more_page.dart';
 
@@ -25,7 +26,7 @@ class _HomeShell extends StatelessWidget {
     final currentIndex = provider.currentIndex;
 
     final List<Widget> pages = [
-      const PlaceholderPage(icon: Icons.dashboard, title: 'Dashboard'),
+      const DashboardPage(),
       const PlaceholderPage(icon: Icons.yard, title: 'Garden'),
       const PlaceholderPage(icon: Icons.eco, title: 'Plant'),
       const PlaceholderPage(icon: Icons.task_alt, title: 'Tasks'),
