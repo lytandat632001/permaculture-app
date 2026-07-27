@@ -35,6 +35,8 @@ class DashboardLocalDatasource {
         location: 'Định Quán - Đồng Nai',
         status: 'active',
         area: 2500,
+        latitude: 11.191,
+        longitude: 107.561,
       ),
       weather: WeatherData(
         currentIcon: '02d',
@@ -177,6 +179,8 @@ class DashboardLocalDatasource {
         location: 'Đà Lạt - Lâm Đồng',
         status: 'active',
         area: 800,
+        latitude: 11.946,
+        longitude: 108.442,
       ),
       weather: WeatherData(
         currentIcon: '03d',
@@ -272,6 +276,8 @@ class DashboardLocalDatasource {
         location: 'Củ Chi - TP.HCM',
         status: 'active',
         area: 5000,
+        latitude: 10.973,
+        longitude: 106.493,
       ),
       weather: WeatherData(
         currentIcon: '01d',

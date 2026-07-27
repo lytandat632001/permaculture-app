@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:permaculture_application/features/home/presentation/pages/home_page.dart';
 import 'package:permaculture_application/firebase_options.dart';
 import 'package:provider/provider.dart';
 import 'core/di/injection.dart'; // ← THÊM DÒNG NÀY

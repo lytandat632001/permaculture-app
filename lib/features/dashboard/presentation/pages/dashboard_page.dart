@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import '../../../../shared/widgets/error_state_widget.dart';
 import '../../../../shared/widgets/loading_indicator.dart';
 import '../../data/datasources/dashboard_local_datasource.dart';
+import '../../data/datasources/weather_remote_datasource.dart';
 import '../../data/repositories/dashboard_repository_impl.dart';
 import '../../domain/usecases/get_gardens_dashboard.dart';
+import '../../domain/usecases/get_garden_weather.dart';
 import '../providers/dashboard_provider.dart';
 import '../widgets/dashboard_header.dart';
 import '../widgets/garden_dashboard_list.dart';
@@ -16,12 +19,28 @@ class DashboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<DashboardProvider>(
       create: (_) {
-        final datasource = DashboardLocalDatasource();
-        final repo = DashboardRepositoryImpl(datasource);
-        final usecase = GetGardensDashboard(repo);
-        return DashboardProvider(usecase);
+        // 1. Datasources
+        final localDatasource = DashboardLocalDatasource();
+        final weatherDatasource = WeatherRemoteDatasource(
+          client: http.Client(),
+        );
+
+        // 2. Repository
+        final repo = DashboardRepositoryImpl(
+          localDatasource: localDatasource,
+          weatherDatasource: weatherDatasource,
+        );
+
+        // 3. Usecases
+        final getGardensDashboard = GetGardensDashboard(repo);
+        final getGardenWeather = GetGardenWeather(repo);
+
+        // 4. Provider
+        return DashboardProvider(
+          getGardensDashboard: getGardensDashboard,
+          getGardenWeather: getGardenWeather,
+        );
       },
-      // child: Text("Tab Dashboard đang hoạt động"),
       child: const _DashboardBody(),
     );
   }

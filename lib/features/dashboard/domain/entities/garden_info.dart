@@ -3,8 +3,10 @@ class GardenInfo {
   final String name;
   final String imageUrl;
   final String location;
-  final String status; // 'active', 'inactive'
-  final double area; // m2
+  final String status;
+  final double area;
+  final double latitude;   // thêm
+  final double longitude;  // thêm
 
   const GardenInfo({
     required this.id,
@@ -13,5 +15,7 @@ class GardenInfo {
     required this.location,
     required this.status,
     required this.area,
+    required this.latitude,
+    required this.longitude,
   });
 }

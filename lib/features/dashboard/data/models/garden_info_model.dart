@@ -8,6 +8,8 @@ class GardenInfoModel extends GardenInfo {
     required super.location,
     required super.status,
     required super.area,
+    required super.latitude,
+    required super.longitude,
   });
 
   factory GardenInfoModel.fromJson(Map<String, dynamic> json) {
@@ -18,15 +20,19 @@ class GardenInfoModel extends GardenInfo {
       location: json['location'] as String,
       status: json['status'] as String,
       area: (json['area'] as num).toDouble(),
+      latitude: (json['latitude'] as num).toDouble(),
+      longitude: (json['longitude'] as num).toDouble(),
     );
   }
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'name': name,
-    'imageUrl': imageUrl,
-    'location': location,
-    'status': status,
-    'area': area,
-  };
+        'id': id,
+        'name': name,
+        'imageUrl': imageUrl,
+        'location': location,
+        'status': status,
+        'area': area,
+        'latitude': latitude,
+        'longitude': longitude,
+      };
 }
