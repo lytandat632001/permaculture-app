@@ -16,8 +16,8 @@ class DashboardProvider extends ChangeNotifier {
   DashboardProvider({
     required GetGardensDashboard getGardensDashboard,
     required GetGardenWeather getGardenWeather,
-  })  : _getGardensDashboard = getGardensDashboard,
-        _getGardenWeather = getGardenWeather {
+  }) : _getGardensDashboard = getGardensDashboard,
+       _getGardenWeather = getGardenWeather {
     load();
   }
 
@@ -25,7 +25,8 @@ class DashboardProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
   int get gardenCount => _gardens.length;
-  int get totalAlerts => _gardens.fold(0, (sum, g) => sum + g.alertSummary.alerts.length);
+  int get totalAlerts =>
+      _gardens.fold(0, (sum, g) => sum + g.alertSummary.alerts.length);
 
   Future<void> load() async {
     _isLoading = true;
@@ -33,20 +34,24 @@ class DashboardProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      // Bước 1: Lấy danh sách garden với thông tin cơ bản (mock)
       final gardenList = await _getGardensDashboard();
 
-      // Bước 2: Với mỗi garden, lấy thời tiết thật từ API và gán lại
       final updatedGardens = await Future.wait(
         gardenList.map((garden) async {
+          // ========== THÊM LOG Ở ĐÂY ==========
+          print(
+            '📍 Đang lấy thời tiết cho ${garden.info.name} (${garden.info.latitude}, ${garden.info.longitude})',
+          );
           try {
             final weather = await _getGardenWeather(
               garden.info.latitude,
               garden.info.longitude,
             );
+            // ========== LOG THÀNH CÔNG ==========
+            print('✅ Thành công: ${garden.info.name}');
             return GardenDashboard(
               info: garden.info,
-              weather: weather, // ghi đè weather bằng dữ liệu thật
+              weather: weather,
               sensors: garden.sensors,
               deviceSummary: garden.deviceSummary,
               taskSummary: garden.taskSummary,
@@ -54,7 +59,8 @@ class DashboardProvider extends ChangeNotifier {
               alertSummary: garden.alertSummary,
             );
           } catch (e) {
-            // Nếu không lấy được thời tiết, giữ lại dữ liệu cũ (hoặc mock)
+            // ========== LOG THẤT BẠI ==========
+            print('❌ Thất bại ${garden.info.name}: $e');
             return garden;
           }
         }),

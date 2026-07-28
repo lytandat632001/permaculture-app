@@ -27,7 +27,10 @@ class GardenDashboardCard extends StatelessWidget {
           children: [
             GardenHeader(info: garden.info),
             const Divider(height: 24),
-            WeatherSection(weather: garden.weather),
+            WeatherSection(
+              weather: garden.weather,
+              cityName: garden.info.location,
+            ),
             const Divider(height: 24),
             SensorSection(sensors: garden.sensors),
             const Divider(height: 24),
