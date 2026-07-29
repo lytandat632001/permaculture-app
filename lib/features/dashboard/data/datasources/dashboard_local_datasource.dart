@@ -35,8 +35,8 @@ class DashboardLocalDatasource {
         location: 'Định Quán - Đồng Nai',
         status: 'active',
         area: 2500,
-        latitude: 11.191,
-        longitude: 107.561,
+        latitude: 11.177083,
+        longitude: 107.305917,
       ),
       weather: WeatherData(
         currentIcon: '02d',

@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import '../../domain/entities/hourly_weather.dart';
+import '../../data/utils/weather_emoji.dart';
 
 class WeatherTimeline extends StatelessWidget {
   final List<HourlyWeather> hourly;
@@ -16,7 +17,7 @@ class WeatherTimeline extends StatelessWidget {
     final currentHourIndex = hourly.indexWhere((h) => h.time.hour == now.hour);
 
     return SizedBox(
-      height: 120,
+      height: 130,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: hourly.length,
@@ -25,10 +26,13 @@ class WeatherTimeline extends StatelessWidget {
           final item = hourly[index];
           final bool isNow = index == currentHourIndex;
 
+          // Debug precipitation
+          debugPrint('Hour ${item.time.hour}: precip=${item.precipitation}');
+
           return AnimatedContainer(
             duration: const Duration(milliseconds: 200),
-            width: 72,
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+            width: 75,
+            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
             decoration: BoxDecoration(
               color: isNow
                   ? colorScheme.primaryContainer
@@ -48,20 +52,23 @@ class WeatherTimeline extends StatelessWidget {
                   : null,
             ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   '${item.time.hour}h',
                   style: textTheme.labelSmall?.copyWith(
                     fontWeight: isNow ? FontWeight.bold : FontWeight.normal,
-                    color: isNow ? colorScheme.primary : colorScheme.onSurfaceVariant,
+                    color: isNow
+                        ? colorScheme.primary
+                        : colorScheme.onSurfaceVariant,
                   ),
                 ),
-                Icon(
-                  _mapTimelineIcon(item.iconCode),
-                  size: 30,
-                  color: isNow ? colorScheme.primary : colorScheme.onSurface,
+                const SizedBox(height: 4),
+                Text(
+                  getWeatherEmoji(item.iconCode),
+                  style: const TextStyle(fontSize: 24),
                 ),
+                const SizedBox(height: 4),
                 Text(
                   '${item.temperature.toStringAsFixed(0)}°',
                   style: textTheme.labelLarge?.copyWith(
@@ -69,15 +76,19 @@ class WeatherTimeline extends StatelessWidget {
                     color: isNow ? colorScheme.primary : colorScheme.onSurface,
                   ),
                 ),
+                // Mô tả ngắn
                 if (item.shortDescription.isNotEmpty)
-                  Text(
-                    item.shortDescription,
-                    style: textTheme.labelSmall?.copyWith(
-                      fontSize: 9,
-                      color: isNow ? colorScheme.primary : colorScheme.onSurfaceVariant,
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2),
+                    child: Text(
+                      item.shortDescription,
+                      style: textTheme.labelSmall?.copyWith(
+                        fontSize: 8,
+                        color: isNow
+                            ? colorScheme.primary
+                            : colorScheme.onSurfaceVariant,
+                      ),
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                   ),
               ],
             ),
@@ -85,15 +96,5 @@ class WeatherTimeline extends StatelessWidget {
         },
       ),
     );
-  }
-
-  IconData _mapTimelineIcon(String code) {
-    if (code.contains('01')) return Icons.wb_sunny;
-    if (code.contains('02') || code.contains('03')) return Icons.cloud;
-    if (code.contains('09') || code.contains('10') || code.contains('11')) {
-      return Icons.water_drop;
-    }
-    if (code.contains('13')) return Icons.ac_unit;
-    return Icons.cloud_queue;
   }
 }

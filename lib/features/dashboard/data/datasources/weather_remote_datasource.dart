@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import '../models/weather_data_model.dart';
 import '../models/hourly_weather_model.dart';
 import '../models/weather_alert_model.dart';
-  import '../utils/weather_mapper.dart';
+import '../utils/weather_mapper.dart';
 
 class WeatherRemoteDatasource {
   final http.Client client;
@@ -89,7 +89,6 @@ class WeatherRemoteDatasource {
     final uvIndices = uvIndicesRaw
         .map((e) => (e as num?)?.toInt() ?? 0)
         .toList();
-
     for (int i = 0; i < length; i++) {
       hourlyList.add(
         HourlyWeatherModel(
@@ -97,14 +96,23 @@ class WeatherRemoteDatasource {
           iconCode: getWeatherIcon(weatherCodes[i]),
           temperature: temperatures[i],
           shortDescription: getWeatherShortDescription(weatherCodes[i]),
+          precipitation: precipitations.length > i ? precipitations[i] : 0.0,
+          uvIndex: uvIndices.length > i ? uvIndices[i] : 0, // <-- thêm
         ),
       );
     }
 
-    // Lấy thông số hiện tại từ giờ đầu tiên (nếu có)
+    // Lấy UV index của giờ hiện tại thay vì giờ đầu tiên
+    final now = DateTime.now();
+    final currentHour = now.hour;
+    final currentHourIdx = times.indexWhere(
+      (t) => DateTime.parse(t).hour == currentHour,
+    );
+    final currentUv = (currentHourIdx >= 0 && uvIndices.length > currentHourIdx)
+        ? uvIndices[currentHourIdx]
+        : 0;
     final currentHumidity = humidities.isNotEmpty ? humidities[0] : 0;
     final currentWindSpeed = windSpeeds.isNotEmpty ? windSpeeds[0] : 0.0;
-    final currentUv = uvIndices.isNotEmpty ? uvIndices[0] : 0;
 
     // Tạo alerts từ dữ liệu đã làm sạch
     final alertMaps = generateWeatherAlerts(
@@ -123,14 +131,30 @@ class WeatherRemoteDatasource {
           ),
         )
         .toList();
-
+    // cuối hàm getWeather, trước return
+    print('===== [DEBUG API] =====');
+    print('Current weather code: $currentWeatherCode');
+    print('Current icon: ${getWeatherIcon(currentWeatherCode)}');
+    print('Current desc: ${getWeatherDescription(currentWeatherCode)}');
+    print(
+      'Current short desc: ${getWeatherShortDescription(currentWeatherCode)}',
+    );
+    print('Hourly codes (first 6): ${weatherCodes.take(6).toList()}');
+    print(
+      'Hourly icons (first 6): ${weatherCodes.take(6).map((c) => getWeatherIcon(c)).toList()}',
+    );
+    print(
+      'Hourly short desc (first 6): ${weatherCodes.take(6).map((c) => getWeatherShortDescription(c)).toList()}',
+    );
+    print('======================');
+    print('Precipitation values (first 6): ${precipitations.take(6).toList()}');
     return WeatherDataModel(
       currentIcon: getWeatherIcon(currentWeatherCode),
       currentTemperature: currentTemp,
       currentDescription: getWeatherDescription(currentWeatherCode),
       humidity: currentHumidity,
       windSpeed: currentWindSpeed,
-      uvIndex: currentUv,
+      uvIndex: currentUv, // giờ đây là UV của giờ hiện tại
       hourly: hourlyList,
       alerts: alerts,
     );
