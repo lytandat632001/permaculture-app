@@ -5,7 +5,8 @@ import 'package:permaculture_application/features/dashboard/data/utils/weather_e
 import '../../domain/entities/weather_data.dart';
 import '../../domain/entities/hourly_weather.dart';
 import 'weather_hero_section.dart';
-import 'weather_alert_banner.dart';
+import 'weather_summary_banner.dart';
+// KHÔNG import weather_alert_banner.dart nữa
 
 class WeatherSection extends StatefulWidget {
   final WeatherData weather;
@@ -24,11 +25,9 @@ class WeatherSection extends StatefulWidget {
 class _WeatherSectionState extends State<WeatherSection> {
   final ScrollController _scrollController = ScrollController();
 
-  // Kích thước thực tế của một mục timeline (width + padding phải)
   static const double _itemWidth = 75.0;
   static const double _itemRightPadding = 4.0;
-  static const double _itemTotalAdvance =
-      _itemWidth + _itemRightPadding; // 79.0
+  static const double _itemTotalAdvance = _itemWidth + _itemRightPadding;
 
   @override
   void initState() {
@@ -39,8 +38,6 @@ class _WeatherSectionState extends State<WeatherSection> {
   @override
   void didUpdateWidget(WeatherSection oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Khi danh sách hourly thay đổi (dữ liệu thực được cập nhật),
-    // cuộn về giờ hiện tại sau khi build xong.
     if (oldWidget.weather.hourly != widget.weather.hourly) {
       WidgetsBinding.instance.addPostFrameCallback(
         (_) => _scrollToCurrentHour(),
@@ -79,24 +76,6 @@ class _WeatherSectionState extends State<WeatherSection> {
     final HourlyWeather currentHourData = currentHourIndex >= 0
         ? widget.weather.hourly[currentHourIndex]
         : widget.weather.hourly.first;
-
-    // Debug (có thể xoá sau khi mọi thứ hoạt động ổn định)
-    print('----- [DEBUG UI] -----');
-    print('Hero iconCode: ${currentHourData.iconCode}');
-    print('Hero shortDescription: ${currentHourData.shortDescription}');
-    print('Hero temperature: ${currentHourData.temperature}');
-    print('Hero emoji: ${getWeatherEmoji(currentHourData.iconCode)}');
-    print(
-      'Timeline first 3 iconCode: ${widget.weather.hourly.take(3).map((e) => e.iconCode).toList()}',
-    );
-    print(
-      'Timeline first 3 shortDesc: ${widget.weather.hourly.take(3).map((e) => e.shortDescription).toList()}',
-    );
-    print(
-      'Timeline first 3 emoji: ${widget.weather.hourly.take(3).map((e) => getWeatherEmoji(e.iconCode)).toList()}',
-    );
-    print('----------------------');
-    print('Current hour precipitation: ${currentHourData.precipitation}');
 
     return Card(
       elevation: 0,
@@ -166,7 +145,7 @@ class _WeatherSectionState extends State<WeatherSection> {
                   return Padding(
                     padding: const EdgeInsets.only(right: 4),
                     child: Container(
-                      width: _itemWidth, // sử dụng hằng số
+                      width: _itemWidth,
                       padding: const EdgeInsets.symmetric(
                         vertical: 8,
                         horizontal: 4,
@@ -242,10 +221,13 @@ class _WeatherSectionState extends State<WeatherSection> {
                 },
               ),
             ),
-            if (widget.weather.alerts.isNotEmpty) ...[
-              const SizedBox(height: 16),
-              WeatherAlertBanner(alerts: widget.weather.alerts),
-            ],
+            // Chỉ giữ WeatherSummaryBanner, không có alert banner
+            const SizedBox(height: 16),
+            WeatherSummaryBanner(
+              hourly: widget.weather.hourly,
+              currentIndex: currentHourIndex,
+              currentWindSpeed: widget.weather.windSpeed,
+            ),
           ],
         ),
       ),

@@ -1,5 +1,3 @@
-// lib/features/dashboard/data/datasources/weather_remote_datasource.dart
-
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/weather_data_model.dart';
@@ -21,32 +19,28 @@ class WeatherRemoteDatasource {
       '?latitude=$latitude&longitude=$longitude'
       '&current_weather=true'
       '&hourly=temperature_2m,relative_humidity_2m,weather_code,precipitation,wind_speed_10m,uv_index'
-      '&timezone=auto&forecast_days=1',
+      '&timezone=auto&forecast_days=2',
     );
 
     final response = await client.get(url);
     print('🌤 [Weather API] Gọi URL: $url');
     print('🌤 [Weather API] Status: ${response.statusCode}');
 
-    if (response.statusCode == 200) {
-      print(
-        '🌤 [Weather API] Dữ liệu trả về (200 ký tự đầu): ${response.body.substring(0, response.body.length > 200 ? 200 : response.body.length)}',
-      );
-    } else {
-      print('🌤 [Weather API] Lỗi: ${response.body}');
-    }
-
     if (response.statusCode != 200) {
+      print('🌤 [Weather API] Lỗi: ${response.body}');
       throw Exception('Không thể tải thời tiết: ${response.statusCode}');
     }
 
     final json = jsonDecode(response.body) as Map<String, dynamic>;
 
-    // Current weather (có thể null nếu API lỗi, nhưng thường có)
+    // Current weather
     final currentWeather = json['current_weather'] as Map<String, dynamic>?;
     final currentWeatherCode = (currentWeather?['weather_code'] as int?) ?? 0;
     final currentTemp =
         (currentWeather?['temperature'] as num?)?.toDouble() ?? 0.0;
+    final currentWindSpeed =
+        (currentWeather?['windspeed'] as num?)?.toDouble() ??
+        0.0; // Lấy từ current_weather
 
     // Hourly
     final hourlyData = json['hourly'] as Map<String, dynamic>?;
@@ -54,7 +48,6 @@ class WeatherRemoteDatasource {
       throw Exception('Không có dữ liệu hourly');
     }
 
-    // Lấy các list raw, cho phép null bên trong
     final timesRaw = (hourlyData['time'] as List<dynamic>?) ?? [];
     final temperaturesRaw =
         (hourlyData['temperature_2m'] as List<dynamic>?) ?? [];
@@ -71,7 +64,6 @@ class WeatherRemoteDatasource {
     final hourlyList = <HourlyWeatherModel>[];
     final length = timesRaw.length;
 
-    // Tạo các list an toàn (thay null bằng giá trị mặc định)
     final times = timesRaw.map((e) => e.toString()).toList();
     final temperatures = temperaturesRaw
         .map((e) => (e as num?)?.toDouble() ?? 0.0)
@@ -89,6 +81,7 @@ class WeatherRemoteDatasource {
     final uvIndices = uvIndicesRaw
         .map((e) => (e as num?)?.toInt() ?? 0)
         .toList();
+
     for (int i = 0; i < length; i++) {
       hourlyList.add(
         HourlyWeatherModel(
@@ -97,12 +90,13 @@ class WeatherRemoteDatasource {
           temperature: temperatures[i],
           shortDescription: getWeatherShortDescription(weatherCodes[i]),
           precipitation: precipitations.length > i ? precipitations[i] : 0.0,
-          uvIndex: uvIndices.length > i ? uvIndices[i] : 0, // <-- thêm
+          uvIndex: uvIndices.length > i ? uvIndices[i] : 0,
+          windSpeed: windSpeeds.length > i ? windSpeeds[i] : 0.0,
         ),
       );
     }
 
-    // Lấy UV index của giờ hiện tại thay vì giờ đầu tiên
+    // Lấy UV index của giờ hiện tại
     final now = DateTime.now();
     final currentHour = now.hour;
     final currentHourIdx = times.indexWhere(
@@ -112,9 +106,8 @@ class WeatherRemoteDatasource {
         ? uvIndices[currentHourIdx]
         : 0;
     final currentHumidity = humidities.isNotEmpty ? humidities[0] : 0;
-    final currentWindSpeed = windSpeeds.isNotEmpty ? windSpeeds[0] : 0.0;
 
-    // Tạo alerts từ dữ liệu đã làm sạch
+    // Tạo alerts
     final alertMaps = generateWeatherAlerts(
       weatherCodes: weatherCodes,
       precipitation: precipitations,
@@ -131,7 +124,7 @@ class WeatherRemoteDatasource {
           ),
         )
         .toList();
-    // cuối hàm getWeather, trước return
+
     print('===== [DEBUG API] =====');
     print('Current weather code: $currentWeatherCode');
     print('Current icon: ${getWeatherIcon(currentWeatherCode)}');
@@ -139,22 +132,16 @@ class WeatherRemoteDatasource {
     print(
       'Current short desc: ${getWeatherShortDescription(currentWeatherCode)}',
     );
-    print('Hourly codes (first 6): ${weatherCodes.take(6).toList()}');
-    print(
-      'Hourly icons (first 6): ${weatherCodes.take(6).map((c) => getWeatherIcon(c)).toList()}',
-    );
-    print(
-      'Hourly short desc (first 6): ${weatherCodes.take(6).map((c) => getWeatherShortDescription(c)).toList()}',
-    );
+    print('Current wind speed: $currentWindSpeed');
     print('======================');
-    print('Precipitation values (first 6): ${precipitations.take(6).toList()}');
+
     return WeatherDataModel(
       currentIcon: getWeatherIcon(currentWeatherCode),
       currentTemperature: currentTemp,
       currentDescription: getWeatherDescription(currentWeatherCode),
       humidity: currentHumidity,
-      windSpeed: currentWindSpeed,
-      uvIndex: currentUv, // giờ đây là UV của giờ hiện tại
+      windSpeed: currentWindSpeed, // gán từ current_weather
+      uvIndex: currentUv,
       hourly: hourlyList,
       alerts: alerts,
     );

@@ -1,4 +1,3 @@
-// lib/features/dashboard/data/models/hourly_weather_model.dart
 import '../../domain/entities/hourly_weather.dart';
 
 class HourlyWeatherModel extends HourlyWeather {
@@ -9,6 +8,7 @@ class HourlyWeatherModel extends HourlyWeather {
     required super.shortDescription,
     super.precipitation,
     super.uvIndex,
+    super.windSpeed,
   });
 
   factory HourlyWeatherModel.fromJson(Map<String, dynamic> json) {
@@ -19,15 +19,17 @@ class HourlyWeatherModel extends HourlyWeather {
       shortDescription: json['shortDescription'] as String,
       precipitation: (json['precipitation'] as num?)?.toDouble() ?? 0.0,
       uvIndex: (json['uvIndex'] as num?)?.toInt() ?? 0,
+      windSpeed: (json['windSpeed'] as num?)?.toDouble(),
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'time': time.toIso8601String(),
-        'iconCode': iconCode,
-        'temperature': temperature,
-        'shortDescription': shortDescription,
-        'precipitation': precipitation,
-        'uvIndex': uvIndex,
-      };
+    'time': time.toIso8601String(),
+    'iconCode': iconCode,
+    'temperature': temperature,
+    'shortDescription': shortDescription,
+    'precipitation': precipitation,
+    'uvIndex': uvIndex,
+    'windSpeed': windSpeed,
+  };
 }
