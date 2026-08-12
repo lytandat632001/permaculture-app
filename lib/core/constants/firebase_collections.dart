@@ -15,4 +15,6 @@ class FirebaseCollections {
   static const String notes = 'notes';
   static const String attachments = 'attachments';
   static const String notifications = 'notifications';
+  static const String locations = 'locations';
+  static const String gardenPlots = 'garden_plots';
 }

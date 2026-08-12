@@ -4,6 +4,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
 import '../../../../shared/pages/placeholder_pages.dart';
 import '../../../dashboard/presentation/pages/dashboard_page.dart';
+import '../../../garden/presentation/pages/location_list_page.dart';
 import '../providers/home_provider.dart';
 import 'more_page.dart';
 
@@ -31,19 +32,51 @@ class _HomeShellState extends State<_HomeShell> {
   OverlayEntry? _overlayEntry;
 
   final List<Map<String, dynamic>> _moreMenuItems = const [
-    {'icon': Icons.set_meal_rounded, 'title': 'Vật nuôi', 'color': Color(0xFFFF9800)},
-    {'icon': Icons.warehouse_rounded, 'title': 'Kho hàng', 'color': Color(0xFF795548)},
-    {'icon': Icons.bar_chart_rounded, 'title': 'Báo cáo', 'color': Color(0xFF00BCD4)},
-    {'icon': Icons.notifications_rounded, 'title': 'Thông báo', 'color': Color(0xFFFF5252)},
-    {'icon': Icons.settings_rounded, 'title': 'Cài đặt', 'color': Color(0xFF607D8B)},
+    {
+      'icon': Icons.set_meal_rounded,
+      'title': 'Vật nuôi',
+      'color': Color(0xFFFF9800),
+    },
+    {
+      'icon': Icons.warehouse_rounded,
+      'title': 'Kho hàng',
+      'color': Color(0xFF795548),
+    },
+    {
+      'icon': Icons.bar_chart_rounded,
+      'title': 'Báo cáo',
+      'color': Color(0xFF00BCD4),
+    },
+    {
+      'icon': Icons.notifications_rounded,
+      'title': 'Thông báo',
+      'color': Color(0xFFFF5252),
+    },
+    {
+      'icon': Icons.settings_rounded,
+      'title': 'Cài đặt',
+      'color': Color(0xFF607D8B),
+    },
   ];
 
   final List<Map<String, dynamic>> _navTabs = const [
-    {'icon': Icons.grid_view_rounded, 'text': 'Home', 'color': Color(0xFF1E88E5)},
+    {
+      'icon': Icons.grid_view_rounded,
+      'text': 'Home',
+      'color': Color(0xFF1E88E5),
+    },
     {'icon': Icons.yard_rounded, 'text': 'Garden', 'color': Color(0xFF4CAF50)},
     {'icon': Icons.eco_rounded, 'text': 'Plant', 'color': Color(0xFF009688)},
-    {'icon': Icons.task_alt_rounded, 'text': 'Tasks', 'color': Color(0xFFFFB300)},
-    {'icon': Icons.more_horiz_rounded, 'text': 'More', 'color': Color(0xFF7C4DFF)},
+    {
+      'icon': Icons.task_alt_rounded,
+      'text': 'Tasks',
+      'color': Color(0xFFFFB300),
+    },
+    {
+      'icon': Icons.more_horiz_rounded,
+      'text': 'More',
+      'color': Color(0xFF7C4DFF),
+    },
   ];
 
   void _hideMoreMenu() {
@@ -54,151 +87,160 @@ class _HomeShellState extends State<_HomeShell> {
   }
 
   void _showMoreMenu(BuildContext context, HomeProvider provider) {
-  _hideMoreMenu();
+    _hideMoreMenu();
 
-  final RenderBox? renderBox =
-      _gnavKey.currentContext?.findRenderObject() as RenderBox?;
-  if (renderBox == null) return;
+    final RenderBox? renderBox =
+        _gnavKey.currentContext?.findRenderObject() as RenderBox?;
+    if (renderBox == null) return;
 
-  final offset = renderBox.localToGlobal(Offset.zero);
-  final theme = Theme.of(context);
-  final isDark = theme.brightness == Brightness.dark;
+    final offset = renderBox.localToGlobal(Offset.zero);
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
-  _overlayEntry = OverlayEntry(
-    builder: (overlayContext) => Positioned(
-      right: 16,
-      bottom: (MediaQuery.of(context).size.height - offset.dy) + 12,
-      width: 190,
-      // TapRegion giúp phát hiện khi chạm ra NGOÀI Menu mà KHÔNG nuốt sự kiện bấm
-      child: TapRegion(
-        onTapOutside: (event) {
-          _hideMoreMenu();
-        },
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Material(
-              elevation: 12,
-              shadowColor: Colors.black.withOpacity(0.25),
-              borderRadius: BorderRadius.circular(20),
-              color: isDark
-                  ? const Color(0xFF1E1E2C).withOpacity(0.9)
-                  : Colors.white.withOpacity(0.92),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: isDark
-                        ? Colors.white.withOpacity(0.12)
-                        : Colors.grey.withOpacity(0.2),
-                  ),
-                ),
-                padding: const EdgeInsets.all(8),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        _hideMoreMenu();
-                        provider.changeTab(4);
-                      },
-                      borderRadius: BorderRadius.circular(12),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 8),
-                        child: Row(
-                          children: [
-                            CircleAvatar(
-                              radius: 14,
-                              backgroundColor:
-                                  const Color(0xFF7C4DFF).withOpacity(0.15),
-                              child: const Icon(Icons.widgets_rounded,
-                                  size: 16, color: Color(0xFF7C4DFF)),
-                            ),
-                            const SizedBox(width: 10),
-                            const Text(
-                              'Tất cả danh mục',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF7C4DFF),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+    _overlayEntry = OverlayEntry(
+      builder: (overlayContext) => Positioned(
+        right: 16,
+        bottom: (MediaQuery.of(context).size.height - offset.dy) + 12,
+        width: 190,
+        // TapRegion giúp phát hiện khi chạm ra NGOÀI Menu mà KHÔNG nuốt sự kiện bấm
+        child: TapRegion(
+          onTapOutside: (event) {
+            _hideMoreMenu();
+          },
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              child: Material(
+                elevation: 12,
+                shadowColor: Colors.black.withOpacity(0.25),
+                borderRadius: BorderRadius.circular(20),
+                color: isDark
+                    ? const Color(0xFF1E1E2C).withOpacity(0.9)
+                    : Colors.white.withOpacity(0.92),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: isDark
+                          ? Colors.white.withOpacity(0.12)
+                          : Colors.grey.withOpacity(0.2),
                     ),
-                    Divider(
-                        height: 12,
-                        thickness: 0.8,
-                        color: isDark ? Colors.white12 : Colors.grey[300]),
-                    ..._moreMenuItems.map((item) {
-                      final Color itemColor = item['color'];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 2.0),
-                        child: InkWell(
-                          onTap: () {
-                            _hideMoreMenu();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Mở ${item['title']}'),
-                                backgroundColor: itemColor,
-                                behavior: SnackBarBehavior.floating,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          _hideMoreMenu();
+                          provider.changeTab(4);
+                        },
+                        borderRadius: BorderRadius.circular(12),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 8,
+                          ),
+                          child: Row(
+                            children: [
+                              CircleAvatar(
+                                radius: 14,
+                                backgroundColor: const Color(
+                                  0xFF7C4DFF,
+                                ).withOpacity(0.15),
+                                child: const Icon(
+                                  Icons.widgets_rounded,
+                                  size: 16,
+                                  color: Color(0xFF7C4DFF),
                                 ),
                               ),
-                            );
-                          },
-                          borderRadius: BorderRadius.circular(12),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 6),
-                            child: Row(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(6),
-                                  decoration: BoxDecoration(
-                                    color: itemColor.withOpacity(0.12),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Icon(
-                                    item['icon'],
-                                    size: 16,
-                                    color: itemColor,
-                                  ),
+                              const SizedBox(width: 10),
+                              const Text(
+                                'Tất cả danh mục',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF7C4DFF),
                                 ),
-                                const SizedBox(width: 12),
-                                Text(
-                                  item['title'],
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
-                                    color: isDark
-                                        ? Colors.white
-                                        : Colors.grey[800],
-                                  ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
-                      );
-                    }),
-                  ],
+                      ),
+                      Divider(
+                        height: 12,
+                        thickness: 0.8,
+                        color: isDark ? Colors.white12 : Colors.grey[300],
+                      ),
+                      ..._moreMenuItems.map((item) {
+                        final Color itemColor = item['color'];
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 2.0),
+                          child: InkWell(
+                            onTap: () {
+                              _hideMoreMenu();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Mở ${item['title']}'),
+                                  backgroundColor: itemColor,
+                                  behavior: SnackBarBehavior.floating,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                              );
+                            },
+                            borderRadius: BorderRadius.circular(12),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 6,
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                      color: itemColor.withOpacity(0.12),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(
+                                      item['icon'],
+                                      size: 16,
+                                      color: itemColor,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Text(
+                                    item['title'],
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                      color: isDark
+                                          ? Colors.white
+                                          : Colors.grey[800],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
         ),
       ),
-    ),
-  );
+    );
 
-  Overlay.of(context).insert(_overlayEntry!);
-}
+    Overlay.of(context).insert(_overlayEntry!);
+  }
 
   @override
   void dispose() {
@@ -213,7 +255,7 @@ class _HomeShellState extends State<_HomeShell> {
 
     final List<Widget> pages = [
       const DashboardPage(),
-      const PlaceholderPage(icon: Icons.yard, title: 'Garden'),
+      const LocationListPage(),
       const PlaceholderPage(icon: Icons.eco, title: 'Plant'),
       const PlaceholderPage(icon: Icons.task_alt, title: 'Tasks'),
       const MorePage(),
@@ -259,12 +301,7 @@ class _HomeShellState extends State<_HomeShell> {
       ),
       body: IndexedStack(index: currentIndex, children: pages),
       bottomNavigationBar: Container(
-        margin: const EdgeInsets.only(
-          left: 16,
-          right: 16,
-          bottom: 16,
-          top: 8,
-        ),
+        margin: const EdgeInsets.only(left: 16, right: 16, bottom: 16, top: 8),
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(30),
