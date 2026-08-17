@@ -71,7 +71,7 @@ dependencies:
 
   # Permissions & Connectivity
   permission_handler: ^11.1.0
-  connectivity_plus: ^5.0.2
+  connectivity_plus: ^6.1.5
   google_nav_bar: ^5.0.7
   http: ^1.6.0
   google_fonts: ^8.2.0
