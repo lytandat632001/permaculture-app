@@ -4,6 +4,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
 import '../../../../shared/pages/placeholder_pages.dart';
 import '../../../dashboard/presentation/pages/dashboard_page.dart';
+import '../../../garden/presentation/pages/garden_page.dart';
 import '../providers/home_provider.dart';
 import 'more_page.dart';
 
@@ -213,13 +214,13 @@ class _HomeShellState extends State<_HomeShell> {
 
     final List<Widget> pages = [
       const DashboardPage(),
-      const PlaceholderPage(icon: Icons.yard, title: 'Garden'),
+      const GardenPage(),
       const PlaceholderPage(icon: Icons.eco, title: 'Plant'),
       const PlaceholderPage(icon: Icons.task_alt, title: 'Tasks'),
       const MorePage(),
     ];
 
-    final titles = ['Dashboard', 'Garden', 'Plant', 'Tasks', 'More'];
+    final titles = ['Dashboard', 'Quản lý vườn', 'Plant', 'Tasks', 'More'];
     final activeTabColor = _navTabs[currentIndex]['color'] as Color;
 
     return Scaffold(
