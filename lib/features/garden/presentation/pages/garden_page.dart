@@ -250,7 +250,7 @@ class _GardenPageState extends State<GardenPage> {
                       spacing: 8,
                       runSpacing: 8,
                       children: [
-                        Chip(label: Text('${crops.where((crop) => crop['completedAt'] == null).length} lứa đang trồng')),
+                        Chip(label: Text('${crops.where((crop) => crop['completedAt'] == null && !_date(crop).isAfter(_today)).length} lứa đang trồng')),
                         ActionChip(
                           label: Text('$dueToday việc hôm nay'),
                           onPressed: () => setState(() => _view = 'Việc chăm sóc'),
@@ -268,6 +268,7 @@ class _GardenPageState extends State<GardenPage> {
             const SizedBox(height: 12),
             if (zones.isNotEmpty)
               DropdownButtonFormField<String>(
+                key: ValueKey(_zoneId),
                 initialValue: _zoneId ?? '',
                 isExpanded: true,
                 decoration: const InputDecoration(labelText: 'Lọc theo khu'),
@@ -348,7 +349,7 @@ class _GardenPageState extends State<GardenPage> {
                     title: Text(_label(crop)),
                     subtitle: Text(
                       '${zoneNames[crop['zone']]} · ${_dateFormat.format(_date(crop))}'
-                      '\n${crop['completedAt'] == null ? 'Đang trồng' : 'Đã kết thúc'}'
+                      '\n${crop['completedAt'] == null ? (_date(crop).isAfter(_today) ? 'Chờ gieo trồng' : 'Đang trồng') : 'Đã kết thúc'}'
                       '${crop['detail'] == '' ? '' : ' · ${crop['detail']}'}',
                     ),
                     trailing: crop['completedAt'] != null ? null : PopupMenuButton<String>(
